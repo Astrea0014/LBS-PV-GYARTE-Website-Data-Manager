@@ -8,12 +8,12 @@ namespace DataManager.DbUtil.PvProjectData
         public int ProjectId { get; set; }
 
         [JsonPropertyName("itch_href")]
-        public string ItchHref { get; set; }
+        public string ItchHyperReference { get; set; }
 
         [JsonPropertyName("video_ref")]
-        public string VideoRef { get; set; }
+        public string VideoReference { get; set; }
 
         [JsonPropertyName("moodboard_ref")]
-        public string MoodboardRef { get; set; }
+        public string MoodboardReference { get; set; }
     }
 }

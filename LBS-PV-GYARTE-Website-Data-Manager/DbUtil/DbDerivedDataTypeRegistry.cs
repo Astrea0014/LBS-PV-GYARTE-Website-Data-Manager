@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using DataManager.DbUtil.GyProjectData;
+
 using DataManager.DbUtil.PvProjectData;
+using DataManager.DbUtil.GyProjectData;
 
 namespace DataManager.DbUtil
 {
@@ -16,5 +17,8 @@ namespace DataManager.DbUtil
 
     // Derived component data types go here...
     [JsonDerivedType(typeof(SU0), nameof(SU0))]
+    [JsonDerivedType(typeof(SY0), nameof(SY0))]
+    [JsonDerivedType(typeof(ES1), nameof(ES1))]
+    [JsonDerivedType(typeof(ES2), nameof(ES2))]
     internal partial interface IComponentData { }
 }

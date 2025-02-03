@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace DataManager.DbUtil.GyProjectData
 {
-    internal struct SU0 : IComponentData
+    internal struct ES2 : IComponentData
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
         [JsonPropertyName("video_ref")]
         public string VideoReference { get; set; }
+
+        [JsonPropertyName("images")]
+        public Image[] Images { get; set; }
     }
 }

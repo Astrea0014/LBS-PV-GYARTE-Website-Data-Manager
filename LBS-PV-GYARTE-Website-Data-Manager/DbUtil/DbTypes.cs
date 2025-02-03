@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-using DataManager.DbUtil.PvProjectData;
+﻿using System.Text.Json.Serialization;
 
 namespace DataManager.DbUtil
 {
@@ -35,7 +28,7 @@ namespace DataManager.DbUtil
         public string Description { get; set; }
 
         [JsonPropertyName("poster_ref")]
-        public string PosterRef { get; set; }
+        public string PosterReference { get; set; }
 
         [JsonPropertyName("collaborators")]
         public string[] Collaborators { get; set; }
@@ -75,7 +68,7 @@ namespace DataManager.DbUtil
         public string GroupName { get; set; }
 
         [JsonPropertyName("poster_ref")]
-        public string PosterRef { get; set; }
+        public string PosterReference { get; set; }
 
         [JsonPropertyName("description")]
         public string Description { get; set; }
