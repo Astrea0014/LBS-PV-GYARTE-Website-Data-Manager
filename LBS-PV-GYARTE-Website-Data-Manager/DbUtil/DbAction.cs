@@ -1,21 +1,46 @@
 ﻿namespace DataManager.DbUtil
 {
-    internal enum DbAction
+    internal enum DbActionType
+    {
+        TABLE,
+        DATA
+    }
+    internal interface IDbAction
+    {
+        abstract DbActionType Type { get; }
+    }
+
+    internal enum DbDataAction
     {
         INSERT,
         UPDATE,
         DELETE
     }
-    internal interface IDbAction
+    internal interface IDbDataAction : IDbAction
     {
-        public abstract DbAction Action { get; }
+        DbActionType IDbAction.Type => DbActionType.DATA;
+        abstract DbDataAction Action { get; }
+        abstract string SqlTableName { get; set; }
     }
-    internal class DbInsertAction : IDbAction
+    internal interface IDbConditionalDataAction : IDbDataAction
     {
-        public DbAction Action => DbAction.INSERT;
+        abstract string SqlCondition { get; set; }
     }
-    internal class DbUpdateAction : IDbAction
+    internal struct DbInsertDataAction : IDbDataAction
     {
-        public DbAction Action => DbAction.UPDATE;
+        public readonly DbDataAction Action => DbDataAction.INSERT;
+        public string SqlTableName { get; set; }
+    }
+    internal struct DbUpdateDataAction : IDbConditionalDataAction
+    {
+        public readonly DbDataAction Action => DbDataAction.UPDATE;
+        public string SqlTableName { get; set; }
+        public string SqlCondition { get; set; }
+    }
+    internal struct DbDeleteDataAction : IDbConditionalDataAction
+    {
+        public readonly DbDataAction Action => DbDataAction.DELETE;
+        public string SqlTableName { get; set; }
+        public string SqlCondition { get; set; }
     }
 }
