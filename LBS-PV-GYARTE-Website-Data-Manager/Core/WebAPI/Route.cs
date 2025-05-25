@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using DataManager.Core.Exceptions;
+using DataManager.Core.Exceptions.Json;
 
 namespace DataManager.Core.WebAPI
 {
@@ -29,12 +32,14 @@ namespace DataManager.Core.WebAPI
         /// <summary>
         /// A Dictionary containing a <see cref="JsonContract.Contract"/>
         /// describing the requirements of which the request JSON-body needs to
-        /// fulfill to meet the criteria. If no request-body is required, the
+        /// fulfill to be accepted by the servers. If no request-body is required, the
         /// <see cref="JsonContract.Contract"/> will be <see langword="null"/>.
         /// </summary>
         public required Dictionary<HttpMethod, JsonContract.Contract?> JsonContracts { get; init; }
 
         public required Dictionary<HttpMethod, HeaderContract.Contract?> HeaderContracts { get; init; }
+
+        public required Dictionary<HttpMethod, Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>?> PerResponseExceptions { get; init; }
     }
 
     /// <summary>
@@ -71,6 +76,15 @@ namespace DataManager.Core.WebAPI
             HeaderContracts = new Dictionary<HttpMethod, HeaderContract.Contract?>
             {
                 [HttpMethod.Post] = null
+            },
+            PerResponseExceptions = new Dictionary<HttpMethod, Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>?>
+            {
+                [HttpMethod.Post] = new Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>
+                {
+                    [HttpStatusCode.BadRequest] = rp => new BadRequestException() { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.Unauthorized] = rp => new AuthenticationException() { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.BadGateway] = rp => new ServerException() { ServerExceptionMessage = rp.ServerExceptionMessage }
+                }
             }
         };
 
@@ -91,6 +105,10 @@ namespace DataManager.Core.WebAPI
                 }
             },
             HeaderContracts = new Dictionary<HttpMethod, HeaderContract.Contract?>
+            {
+                [HttpMethod.Post] = null
+            },
+            PerResponseExceptions = new Dictionary<HttpMethod, Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>?>
             {
                 [HttpMethod.Post] = null
             }
@@ -141,6 +159,31 @@ namespace DataManager.Core.WebAPI
                 },
                 [HttpMethod.Post] = null,
                 [HttpMethod.Patch] = null
+            },
+            PerResponseExceptions = new Dictionary<HttpMethod, Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>?>
+            {
+                [HttpMethod.Get] = new Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>
+                {
+                    [HttpStatusCode.Unauthorized]   = rp => new AuthenticationException()   { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.Forbidden]      = rp => new AuthorizationException()    { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.NotFound]       = rp => new NotFoundException()         { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.BadGateway]     = rp => new ServerException()           { ServerExceptionMessage = rp.ServerExceptionMessage }
+                },
+                [HttpMethod.Post] = new Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>
+                {
+                    [HttpStatusCode.BadRequest]     = rp => new BadRequestException()       { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.Unauthorized]   = rp => new AuthenticationException()   { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.NotFound]       = rp => new NotFoundException()         { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.BadGateway]     = rp => new ServerException()           { ServerExceptionMessage = rp.ServerExceptionMessage }
+                },
+                [HttpMethod.Patch] = new Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>
+                {
+                    [HttpStatusCode.BadRequest]     = rp => new BadRequestException()       { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.Unauthorized]   = rp => new AuthenticationException()   { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.Forbidden]      = rp => new AuthorizationException()    { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.NotFound]       = rp => new NotFoundException()         { ServerExceptionMessage = rp.ServerExceptionMessage },
+                    [HttpStatusCode.BadGateway]     = rp => new ServerException()           { ServerExceptionMessage = rp.ServerExceptionMessage }
+                }
             }
         };
 
@@ -168,6 +211,10 @@ namespace DataManager.Core.WebAPI
                 }
             },
             HeaderContracts = new Dictionary<HttpMethod, HeaderContract.Contract?>
+            {
+                [HttpMethod.Post] = null
+            },
+            PerResponseExceptions = new Dictionary<HttpMethod, Dictionary<HttpStatusCode, Func<FailureResponsePayload, Exception>>?>
             {
                 [HttpMethod.Post] = null
             }

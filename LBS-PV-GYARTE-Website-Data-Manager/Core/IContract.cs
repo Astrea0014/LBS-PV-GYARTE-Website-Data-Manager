@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataManager.Core.WebAPI
+namespace DataManager.Core
 {
-    class Entity
+    interface IContract
     {
-
+        Task<bool> ValidateAsync(string data);
     }
 }

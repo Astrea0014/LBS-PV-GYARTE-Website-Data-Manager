@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataManager.Core.HeaderContract
 {
-    class Contract
+    class Contract : IContract
     {
         public required HeaderRequirement[] HeaderRequirements { get; init; }
 
-        public bool Validate(string headers)
+        public Task<bool> ValidateAsync(string headers)
         {
             throw new NotImplementedException();
         }

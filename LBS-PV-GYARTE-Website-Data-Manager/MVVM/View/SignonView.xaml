@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="DataManager.MVVM.View.SignonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DataManager.MVVM.View"
+             xmlns:vm="clr-namespace:DataManager.MVVM.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:SignonViewModel/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="170"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="LBS Södra Admin"
+                   Foreground="White"
+                   FontSize="80"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="1"
+                        Margin="10">
+                <Button x:Name="LoadButton"
+                        Style="{StaticResource ButtonStyle}"
+                        Content="Load key from keystore"
+                        Visibility="{Binding KeyStoreButtonVisibility}"
+                        Command="{Binding LoadFromKeystoreCommand}"
+                        IsEnabled="{Binding IsButtonsEnabled}"/>
+
+                <Button x:Name="ManualInsertionButton"
+                        Style="{StaticResource ButtonStyle}"
+                        Content="Insert key manually"
+                        Click="Button_Click"
+                        IsEnabled="{Binding IsManualInsertionButtonEnabled}"/>
+
+                <TextBox x:Name="ManualInsertionTextBox"
+                         Height="0" Margin="10,5"
+                         Text="{Binding Key}"/>
+
+                <Button x:Name="ManualInsertionSubmitButton"
+                        Style="{StaticResource ButtonStyle}"
+                        Content="Submit"
+                        Height="0"
+                        Command="{Binding ManualInsertionCommand}"
+                        IsEnabled="{Binding IsButtonsEnabled}"/>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.RowSpan="2"
+                Background="#111"
+                BorderBrush="White" BorderThickness="1"
+                CornerRadius="2"
+                Width="300" Height="150"
+                Visibility="{Binding PopupVisibility}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Attempting to connect to server..."
+                           Foreground="White"
+                           HorizontalAlignment="Center"
+                           Margin="0,10"
+                           FontSize="24"
+                           TextWrapping="Wrap"/>
+
+                <Button Grid.Row="1"
+                        Style="{StaticResource ButtonStyle}"
+                        Margin="80,5"
+                        Content="Cancel"
+                        Command="{Binding CancelConnectingCommand}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
